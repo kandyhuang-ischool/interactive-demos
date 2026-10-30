@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>互動網頁作品集</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Noto+Serif+TC:wght@600&display=swap">
+<style>
+:root{--cream:#F4ECE1;--taupe:#5B554D;--taupe-2:#8C857B;--hair:#D9CFC2}
+@media (prefers-color-scheme:dark){:root{--cream:#1B1815;--taupe:#EAE1D6;--taupe-2:#A99E91;--hair:#3D352E}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--cream);color:var(--taupe);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:640px;margin:0 auto;padding:72px 16px 48px}
+.eyebrow{font-size:12px;letter-spacing:.22em;color:var(--taupe-2)}
+h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:clamp(28px,5vw,38px);margin:8px 0 32px}
+ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+a{display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center;padding:20px 6px;border-bottom:1px solid var(--hair);color:inherit;text-decoration:none}
+a:hover{background:rgba(255,255,255,.35)}
+.no{font-family:"Noto Serif TC",serif;font-size:20px;color:var(--taupe-2)}
+.t{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600}
+.t small{display:block;font-family:"Noto Sans TC",sans-serif;font-weight:400;font-size:13px;color:var(--taupe-2);margin-top:3px}
+.arr{color:var(--taupe-2);font-size:20px}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">INTERACTIVE DEMOS</div>
+  <h1>互動網頁作品集</h1>
+  <ul>
+    <!-- 新增作品：複製一個 <li>，改 href、編號、標題與說明 -->
+    <li><a href="attendance-bigscreen/"><span class="no">01</span><span class="t">大屏點名互動體驗<small>1Campus 班級點名：教室大屏點名、授課老師簽名、班導師審核、學務處週報</small></span><span class="arr">→</span></a></li>
+    <li><a href="attendance-classroom/"><span class="no">02</span><span class="t">課堂點名互動體驗<small>1Campus 課程點名：老師手機 App 點名、學生小幫手代點與密碼確認</small></span><span class="arr">→</span></a></li>
+  </ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,1294 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>課堂點名互動體驗</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#EEF2F3; --surface:#FFFFFF; --surface-2:#F5F7F8; --line:#E1E6E9; --line-2:#C9D1D6;
+  --ink:#1F2A30; --ink-2:#4A5A63; --muted:#7B8A92;
+  --accent:#2B7FD0; --accent-ink:#FFFFFF; --accent-soft:#E3F0FB;
+  --teal:#9FCFC7; --teal-2:#C9E6E1; --teal-ink:#1E5B52;
+  --ok:#22A06B; --warn:#F08A24; --bad:#D8283E;
+  --shadow:0 8px 28px rgba(31,42,48,.10);
+  --cream:#F4ECE1; --paper:#FBF6EE; --taupe:#5B554D; --taupe-2:#8C857B; --hair:#D9CFC2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14191C; --surface:#1D2428; --surface-2:#242C31; --line:#33404A; --line-2:#465562;
+    --ink:#EAF0F3; --ink-2:#C0CBD2; --muted:#8B98A1; --accent:#6FB0F0; --accent-ink:#0E1A26; --accent-soft:#1E3448;
+    --teal:#2F5C55; --teal-2:#254A45; --teal-ink:#BFE5DD; --shadow:0 8px 28px rgba(0,0,0,.45);
+    --cream:#1B1815; --paper:#241F1B; --taupe:#EAE1D6; --taupe-2:#A99E91; --hair:#3D352E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14191C; --surface:#1D2428; --surface-2:#242C31; --line:#33404A; --line-2:#465562;
+  --ink:#EAF0F3; --ink-2:#C0CBD2; --muted:#8B98A1; --accent:#6FB0F0; --accent-ink:#0E1A26; --accent-soft:#1E3448;
+  --teal:#2F5C55; --teal-2:#254A45; --teal-ink:#BFE5DD; --shadow:0 8px 28px rgba(0,0,0,.45);
+  --cream:#1B1815; --paper:#241F1B; --taupe:#EAE1D6; --taupe-2:#A99E91; --hair:#3D352E;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+body.at-home{background:var(--cream)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 40px;padding-inline:16px}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ================= HOME ================= */
+.home{min-height:calc(100vh - 60px);display:grid;grid-template-columns:minmax(280px,420px) minmax(300px,520px);gap:56px;align-items:center;justify-content:center;padding-block:24px}
+@media (max-width:860px){.home{grid-template-columns:minmax(0,420px);gap:28px;justify-items:center}}
+.poster{background:var(--paper);padding:26px 26px 0;box-shadow:0 30px 80px rgba(80,50,20,.14);width:100%}
+.poster .art{position:relative;aspect-ratio:3/4;overflow:hidden;background:#E9EEF1}
+.poster .art i{position:absolute;border-radius:50%;filter:blur(34px);opacity:.6}
+.poster .art .a1{width:120%;height:95%;left:-45%;bottom:-25%;background:radial-gradient(circle at 60% 40%,#8FC9D8,#4E9AB5 60%,#2C6A85 100%)}
+.poster .art .a2{width:80%;height:60%;left:5%;top:-10%;background:radial-gradient(circle,#F9D9A0,#F2B96A 60%,transparent 100%)}
+.poster .art .a3{width:85%;height:75%;right:-25%;top:5%;background:radial-gradient(circle at 40% 40%,#F7A7A0,#EC7C7C 55%,transparent 100%)}
+.poster .art .a4{width:70%;height:50%;right:-15%;bottom:-5%;background:radial-gradient(circle,#DCEBF0,transparent 70%)}
+.poster .art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 40%,rgba(251,246,238,.35));pointer-events:none}
+.mascots{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding:0 0 6%}
+.mascots canvas{width:100%;height:84%;display:block}
+.poster .cap{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;text-align:center;color:var(--taupe);padding:26px 8px 30px;font-size:clamp(22px,3vw,30px);line-height:1.3}
+.poster .cap .rule{width:70%;height:1px;background:var(--hair);margin:10px auto}
+.entry{color:var(--taupe);width:100%}
+.entry .eyebrow{font-size:12px;letter-spacing:.22em;color:var(--taupe-2);text-transform:uppercase}
+.entry h1{font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;font-weight:600;font-size:clamp(28px,3.4vw,40px);line-height:1.25;margin:8px 0 14px;color:var(--taupe)}
+.entry p.lead{margin:0 0 28px;color:var(--taupe-2);font-size:15px;line-height:1.8;max-width:34em}
+.entry .hair{height:1px;background:var(--hair);margin:0 0 6px}
+.role{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:16px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--hair);padding:18px 6px;color:var(--taupe);transition:background .15s}
+.role:hover{background:rgba(255,255,255,.35)}
+.role .no{font-family:"Noto Serif TC",serif;font-size:22px;color:var(--taupe-2)}
+.role .t{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600}
+.role .t small{display:block;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:400;color:var(--taupe-2);margin-top:2px;line-height:1.6}
+.role .arr{font-size:20px;color:var(--taupe-2);transition:transform .15s}
+.role:hover .arr{transform:translateX(4px);color:var(--taupe)}
+.entry .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px;font-size:12px;color:var(--taupe-2)}
+.linkbtn{background:none;border:1px solid var(--hair);color:var(--taupe-2);border-radius:999px;padding:6px 14px;font-size:12px}
+.linkbtn:hover{color:var(--taupe);border-color:var(--taupe-2)}
+
+/* ================= STAGE LAYOUT ================= */
+.stage{max-width:1100px;margin:0 auto}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.topbar .who{font-weight:700;color:var(--ink)}
+.topbar .who small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.sp{flex:1}
+.menubtn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(43,127,208,.3)}
+.menubtn:hover{filter:brightness(1.08)}
+.duo{display:grid;grid-template-columns:400px 1fr;gap:28px;align-items:start;justify-content:center}
+@media (max-width:860px){.duo{grid-template-columns:minmax(0,400px);justify-items:center}}
+
+/* phone frame */
+.phone{width:400px;max-width:100%;background:#111418;border-radius:44px;padding:12px;box-shadow:0 30px 60px rgba(0,0,0,.28),inset 0 0 0 2px #2b3138;position:relative}
+.phone .screen{background:var(--surface);border-radius:34px;overflow:hidden;height:780px;display:flex;flex-direction:column;position:relative}
+.phone .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#111418;border-radius:0 0 18px 18px;z-index:5}
+.statusbar{display:flex;justify-content:space-between;align-items:center;padding:12px 26px 0;font-size:12px;font-weight:700;color:var(--ink);height:40px}
+.statusbar .time{background:#D8283E;color:#fff;border-radius:6px;padding:1px 7px;font-size:11px}
+.apphdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;font-size:15px;color:var(--ink)}
+.apphdr .x{font-size:20px;color:var(--ink-2);line-height:1}
+.scr{flex:1;overflow:auto;padding:0 12px 16px;scrollbar-width:thin}
+.scr.center{display:flex;flex-direction:column}
+.foot-pw{text-align:center;color:var(--muted);font-size:12px;padding:12px 0 4px;margin-top:auto}
+
+/* ---- teacher app widgets (light teal, like video) ---- */
+.tt{font-weight:700;font-size:14px;margin:6px 4px 8px;display:flex;align-items:center;gap:8px}
+.tt .btn-s{margin-left:auto}
+.btn-s{border:1px solid var(--line-2);background:var(--surface);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--ink)}
+.btn-s.dark{background:#333;border-color:#333;color:#fff}
+.btn-s.blue{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-s.teal{background:var(--teal);border-color:var(--teal);color:var(--teal-ink)}
+table.app{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+table.app th{background:var(--teal-2);color:var(--teal-ink);font-weight:700;padding:8px 8px;text-align:left;font-size:12px}
+table.app td{padding:9px 8px;border-top:1px solid var(--line);background:var(--surface)}
+table.app tr.row{cursor:pointer}
+table.app tr.row:hover td{background:var(--accent-soft)}
+table.app tr.hot td{animation:pulse 1.6s infinite}
+table.app td.c,table.app th.c{text-align:center}
+.ck{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:2px solid #CFE3F4;color:#CFE3F4;font-size:11px;font-weight:900}
+.ck.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.rowbtns{display:flex;justify-content:flex-end;gap:6px;margin:8px 0}
+.course{display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-top:1px solid var(--line);font-size:13px;cursor:pointer}
+.course:hover{background:var(--accent-soft)}
+.course .hp{color:var(--ink-2);font-size:12px;text-align:right}
+.course .hp b{color:var(--ink)}
+@keyframes pulse{0%,100%{box-shadow:inset 0 0 0 0 var(--accent-soft)}50%{box-shadow:inset 0 0 0 3px var(--accent-soft)}}
+/* roll call (teacher) */
+.crumb{display:flex;align-items:center;gap:6px;background:var(--teal-2);color:var(--teal-ink);border-radius:8px;padding:8px 10px;font-size:13px;margin:4px 0 8px}
+.crumb b{font-weight:700}
+.crumb .back{border:0;background:none;color:var(--teal-ink);font-weight:700;padding:0 2px}
+.chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);margin:2px 4px 8px}
+.chk i{width:12px;height:12px;border:1px solid var(--line-2);border-radius:2px;display:inline-block}
+.tools{display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative}
+.dd{border:1px solid var(--line-2);background:var(--surface);border-radius:6px;padding:5px 10px;font-size:12px;display:inline-flex;gap:6px;align-items:center}
+.dd.filled{background:var(--accent);border-color:var(--accent);color:#fff}
+.ddmenu{position:absolute;top:100%;left:0;margin-top:4px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:8px;padding:4px;z-index:6;min-width:110px}
+.ddmenu button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px;color:var(--ink);font-size:13px}
+.ddmenu button:hover{background:var(--surface-2)}
+.ddmenu button.cur{background:var(--accent-soft);font-weight:700}
+.rednote{color:var(--bad);font-size:11.5px;margin:0 4px 8px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.05);cursor:pointer;text-align:left;padding:0;color:var(--ink)}
+.card:hover{border-color:var(--accent)}
+.card .ph{position:relative;aspect-ratio:3/4;background:#DDE3E8;overflow:hidden}
+.card .ph .face{position:absolute;inset:0}
+.card .ph .face::before{content:"";position:absolute;left:50%;top:22%;width:44%;height:40%;transform:translateX(-50%);border-radius:50% 50% 46% 46%;background:#F3D7C3;filter:blur(1px)}
+.card .ph .face::after{content:"";position:absolute;left:50%;bottom:-6%;width:86%;height:40%;transform:translateX(-50%);border-radius:50% 50% 0 0;background:#F6F8FA;filter:blur(1px)}
+.card .ph .hair{position:absolute;left:50%;top:14%;width:52%;height:30%;transform:translateX(-50%);border-radius:50% 50% 30% 30%;background:#2B2622;filter:blur(1.5px)}
+.card .ph .hair.long{height:52%;border-radius:50% 50% 20% 20%}
+.card .ph .blur{position:absolute;inset:0;backdrop-filter:blur(4px)}
+.card .st{position:absolute;left:8px;right:8px;bottom:8px;border-radius:4px;color:#fff;font-weight:700;font-size:12px;text-align:center;padding:4px 0}
+.card .st.abs{background:var(--bad)}.card .st.late{background:var(--warn)}
+.card .st.helper{background:#1E9E4E}
+.card .meta{padding:6px 8px 8px;font-size:12px;color:var(--ink-2)}
+.card .meta .n{display:flex;justify-content:space-between;color:var(--ink);font-weight:700}
+.card .meta .n span:last-child{font-weight:500;font-size:11px}
+.card .meta .n .low{color:var(--bad)}
+.card .meta .i{display:flex;justify-content:space-between;margin-top:2px}
+.card.selected{outline:2px solid #1E9E4E}
+/* settings */
+.set{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.set .sh{background:var(--teal-2);color:var(--teal-ink);font-weight:700;padding:8px 10px;display:flex;align-items:center;font-size:13px}
+.set .sh .btn-s{margin-left:auto}
+.set .r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--line);font-size:13px}
+.set .r small{display:block;color:var(--muted);font-size:11px}
+.radio{display:inline-flex;gap:10px;font-size:12px}
+.radio i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--line-2);display:inline-block;vertical-align:-2px;margin-right:3px}
+.radio i.on{border-color:var(--accent);background:radial-gradient(circle,var(--accent) 45%,transparent 50%)}
+.pw{border:1px solid var(--line-2);border-radius:6px;padding:3px 10px;font-size:13px;letter-spacing:.3em;background:var(--surface-2)}
+/* helper app (blue, like video) */
+.h-title{font-weight:700;font-size:15px;margin:8px 8px 6px}
+.chips{display:flex;gap:8px;margin:0 8px 12px}
+.chip{border:1px solid #CFE3F4;background:#EAF3FB;color:#2B7FD0;border-radius:999px;padding:2px 10px;font-size:11px}
+.chip b{margin-left:4px}
+table.happ{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+table.happ th{background:#CFE4F6;color:#1F2A30;padding:9px 10px;text-align:left;font-weight:700}
+table.happ td{padding:10px;border-top:1px solid var(--line);background:var(--surface);font-weight:700}
+table.happ tr:nth-child(even) td{background:var(--surface-2)}
+table.happ th.c,table.happ td.c{text-align:center;font-weight:500}
+table.happ tr.row{cursor:pointer}
+table.happ tr.row:hover td{background:var(--accent-soft)}
+.badge{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#2B7FD0;color:#fff;font-size:11px;font-weight:700}
+.hcrumb{background:#CFE4F6;border-radius:8px;padding:10px 12px;font-size:14px;margin:6px 0 10px;display:flex;align-items:center;gap:8px}
+.hcrumb .back{border:0;background:none;padding:0;font:inherit;color:var(--ink)}
+.hcrumb b{font-weight:700}
+.htools{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;position:relative}
+.hbtn{background:#2B7FD0;color:#fff;border:0;border-radius:6px;padding:7px 12px;font-weight:700;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.hbtn.light{background:#6FB0F0}
+.hbtn[disabled]{opacity:.5}
+.srow{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.srow .nm{font-weight:700;font-size:14px}
+.srow .id{color:var(--ink-2);font-weight:700;font-size:13px}
+.srow .seat{font-weight:700;color:var(--ink-2);margin-right:12px;font-size:13px}
+.srow .stb{min-width:76px;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;padding:9px 0;font-weight:700;color:var(--muted);font-size:13px}
+.srow .stb.abs{background:var(--bad);border-color:var(--bad);color:#fff}
+.srow .stb.late{background:var(--warn);border-color:var(--warn);color:#fff}
+.srow .stb:hover{border-color:var(--accent)}
+/* in-phone dialog */
+.pdlg{position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:8;display:grid;place-items:start center;padding-top:40px}
+.pdlg .box{background:var(--surface);border-radius:10px;box-shadow:var(--shadow);width:min(300px,90%);padding:16px 18px;position:relative}
+.pdlg h4{font-size:16px;font-weight:700}
+.pdlg .x{position:absolute;right:10px;top:8px;border:0;background:none;color:var(--muted);font-size:16px}
+.pdlg p{margin:12px 0 0;font-size:13px;color:var(--ink-2)}
+.pdlg .pwrow{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px}
+.pdlg input{flex:1;border:1px solid var(--accent);border-radius:4px;padding:5px 8px;font:inherit;letter-spacing:.3em;color:var(--ink);background:var(--surface)}
+.pdlg .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+/* period picker */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.pbtn{border:2px solid #2B7FD0;background:var(--surface);color:var(--ink);border-radius:6px;padding:9px 0;font-size:14px;font-weight:600}
+.pbtn:hover:not([disabled]){background:var(--accent-soft)}
+.pbtn[disabled]{border-color:var(--line);color:var(--line-2);background:var(--surface-2);cursor:not-allowed}
+/* date dropdown */
+.daterow{display:flex;align-items:center;gap:10px;margin:8px 4px 8px}
+.dlabel{font-weight:700;font-size:14px}
+.dsel-wrap{position:relative}
+.dsel{border:1px solid #CFE3F4;background:#EAF3FB;color:#1F2A30;border-radius:6px;padding:6px 10px;font-size:13px;font-weight:600;display:inline-flex;gap:8px;align-items:center}
+.dsel span{color:var(--muted)}
+.dmenu{min-width:190px;font-size:13px}
+/* date picker (legacy) */
+.datebtn{border:0;background:none;padding:0;font:inherit;font-weight:700;font-size:14px;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.datebtn .cal-ic{font-size:13px;opacity:.75}
+.datebtn:hover{color:var(--accent)}
+.dnav{text-align:center;font-weight:700;margin:10px 0 6px;color:var(--ink)}
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.dgrid .dow{font-size:12px;color:var(--muted);padding:4px 0}
+.dbtn{border:1px solid transparent;background:none;border-radius:8px;padding:7px 0;font-size:13px;color:var(--ink)}
+.dbtn:hover:not([disabled]){background:var(--accent-soft)}
+.dbtn.today{border-color:var(--accent);font-weight:700}
+.dbtn.cur{background:var(--accent);color:#fff}
+.dbtn[disabled]{color:var(--line-2);cursor:not-allowed}
+/* success/state banner inside phone */
+.pbanner{margin:6px 0 10px;border-radius:8px;padding:9px 12px;font-size:12.5px;display:flex;gap:8px;align-items:flex-start}
+.pbanner.ok{background:#E7F8EF;color:#1D7A4A;border:1px solid #9FDDB8}
+.pbanner.info{background:var(--accent-soft);color:var(--accent);border:1px solid #BFD9F2}
+.pbanner.warn{background:#FFF3E0;color:#9A5A0B;border:1px solid #F5D4A6}
+.pbanner b{display:block}
+.pbanner .btn-s{margin-left:auto;white-space:nowrap}
+
+/* ---- side panel: SIS ---- */
+.side{display:grid;gap:14px}
+.sis{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.sis .hd{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);font-weight:700;font-size:13px}
+.sis .hd .pill{margin-left:auto}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.pill.g{background:#E7F8EF;color:#1D7A4A}.pill.n{background:var(--surface-2);color:var(--muted)}.pill.y{background:#FFF3C4;color:#7A5A00}
+table.mini{width:100%;border-collapse:collapse;font-size:13px}
+table.mini th,table.mini td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+table.mini th{color:var(--muted);font-weight:500;font-size:12px}
+table.mini tr.new td{animation:rowin .6s ease}
+@keyframes rowin{from{background:var(--accent-soft)}to{background:transparent}}
+.sis .empty{padding:18px 14px;color:var(--muted);font-size:13px}
+.flow{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px;box-shadow:var(--shadow)}
+.flow h4{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+.flow ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.flow li{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-2)}
+.flow li .d{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none}
+.flow li.done .d{background:var(--ok);border-color:var(--ok);color:#fff}
+.flow li.done{color:var(--muted);text-decoration:line-through}
+.flow li.cur .d{border-color:var(--accent);color:var(--accent);animation:pulse2 1.6s infinite}
+.flow li.cur{color:var(--ink);font-weight:700}
+@keyframes pulse2{0%,100%{box-shadow:0 0 0 2px var(--accent-soft)}50%{box-shadow:0 0 0 6px transparent}}
+.lane{display:grid;grid-template-columns:1fr 90px 1fr;gap:8px;align-items:center;margin-bottom:10px}
+.node{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.node .lbl{font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-weight:700}
+.node .nm{font-weight:700;font-size:14px}
+.node .sm{font-size:12px;color:var(--ink-2);margin-top:4px}
+.pipe{position:relative;height:30px}
+.pipe::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px dashed var(--line-2)}
+.pipe .pk{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);background:var(--accent);color:#fff;border-radius:6px;font-size:11px;padding:2px 7px;font-weight:700;opacity:0}
+.pipe.go .pk{animation:fly 1.1s ease-in-out forwards}
+.pipe.go .pk:nth-child(2){animation-delay:.35s}
+@keyframes fly{0%{left:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:100%;opacity:0}}
+@media (prefers-reduced-motion:reduce){.pipe.go .pk{animation:none;opacity:0}.hot td,.flow li.cur .d{animation:none!important}}
+.donebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:10px;background:#E7F8EF;border:1px solid #9FDDB8;color:#1D7A4A;font-weight:700}
+.btn{border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 14px;font-weight:600}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* ===== stage right side: match entry style ===== */
+body{background:var(--cream)}
+.stage{max-width:1120px}
+.topbar{margin-bottom:22px;align-items:flex-end}
+.topbar .who{font-family:"Noto Serif TC","Songti TC",serif;font-weight:600;font-size:26px;color:var(--taupe);line-height:1.2}
+.topbar .who small{font-family:"Noto Sans TC",sans-serif;font-size:13px;color:var(--taupe-2);margin-top:6px;letter-spacing:.04em}
+.menubtn{background:var(--taupe);color:var(--cream);box-shadow:none;border-radius:999px;padding:10px 18px}
+.menubtn:hover{filter:none;background:#3E3934}
+.duo{gap:44px}
+.side{gap:34px;padding-top:6px;color:var(--taupe)}
+.flow,.sis{border:0;border-radius:0;background:none;box-shadow:none;padding:0}
+.flow h4,.sis .hd{font-family:"Noto Serif TC","Songti TC",serif;font-weight:600;font-size:18px;color:var(--taupe);letter-spacing:.02em;margin:0 0 4px;padding:0 0 12px;border-bottom:1px solid var(--hair);background:none;display:flex;align-items:center;gap:10px}
+.flow h4::before,.sis .hd::before{content:"";width:22px;height:1px;background:var(--taupe-2)}
+.flow ol{gap:0}
+.flow li{padding:14px 4px;border-bottom:1px solid var(--hair);font-size:14px;line-height:1.7;color:var(--taupe-2);gap:16px;align-items:flex-start}
+.flow li .d{width:26px;height:26px;border:1px solid var(--hair);color:var(--taupe-2);font-family:"Noto Serif TC",serif;font-size:13px;margin-top:2px}
+.flow li.cur{color:var(--taupe);font-weight:600}
+.flow li.cur .d{border-color:var(--taupe);color:var(--taupe);animation:none;box-shadow:0 0 0 3px rgba(91,85,77,.12)}
+.flow li.done{text-decoration:none;color:var(--taupe-2);opacity:.65}
+.flow li.done .d{background:var(--taupe-2);border-color:var(--taupe-2);color:var(--cream)}
+.sis .hd .pill{margin-left:auto;font-family:"Noto Sans TC",sans-serif}
+.pill{border-radius:999px;font-weight:600}
+.pill.n{background:transparent;border:1px solid var(--hair);color:var(--taupe-2)}
+.pill.g{background:transparent;border:1px solid #7FBF9A;color:#2E7D55}
+.lane{margin:18px 0 10px}
+.node{background:var(--paper);border:1px solid var(--hair);border-radius:12px;padding:14px 16px}
+.node .lbl{color:var(--taupe-2)}
+.node .nm{font-family:"Noto Serif TC",serif;font-weight:600;font-size:17px;color:var(--taupe)}
+.node .sm{color:var(--taupe-2);font-size:12.5px;margin-top:6px}
+.pipe::before{border-top:1px dashed var(--taupe-2)}
+.pipe .pk{background:var(--taupe);color:var(--cream)}
+.sis .empty{padding:14px 4px 0;color:var(--taupe-2);font-size:13.5px;line-height:1.8}
+table.mini{margin-top:4px}
+table.mini th{color:var(--taupe-2);font-size:12px;font-weight:500;border-bottom:1px solid var(--hair);padding:8px 6px;letter-spacing:.04em}
+table.mini td{border-bottom:1px solid var(--hair);padding:12px 6px;color:var(--taupe);font-size:13.5px}
+table.mini tr.new td{animation:rowin2 .8s ease}
+@keyframes rowin2{from{background:rgba(91,85,77,.08)}to{background:transparent}}
+.donebar{background:var(--paper);border-color:var(--hair);color:var(--taupe)}
+.toast{border-left-color:var(--taupe)}
+
+/* toasts / modals */
+.toasts{position:fixed;right:18px;bottom:18px;display:grid;gap:8px;z-index:50}
+.toast{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ok);box-shadow:var(--shadow);border-radius:10px;padding:10px 14px;min-width:240px;max-width:320px;animation:in .25s ease}
+.toast.warn{border-left-color:var(--warn)}.toast.info{border-left-color:var(--accent)}
+.toast b{display:block}.toast span{color:var(--ink-2);font-size:13px}
+@keyframes in{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.modal{position:fixed;inset:0;background:rgba(20,22,35,.5);display:grid;place-items:center;padding:16px;z-index:40}
+.modal .box{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);width:min(520px,100%);padding:18px 20px;position:relative;max-height:92vh;overflow:auto}
+.modal h3{font-size:17px;font-weight:700}
+.modal .sub{color:var(--muted);font-size:13px;margin:4px 0 10px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.leftlist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.leftlist li{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.leftlist .ln{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none;margin-top:1px}
+.leftlist b{color:var(--ink)}.leftlist .lsub{font-size:12px;color:var(--ink-2)}
+.done-modal{text-align:center}
+.done-modal .ckb{width:70px;height:70px;border-radius:50%;border:3px solid var(--ok);display:grid;place-items:center;color:var(--ok);font-size:34px;margin:6px auto 10px}
+.done-modal h3{font-size:22px}
+.done-modal p{color:var(--ink-2);margin:4px 0 14px}
+.written{margin-top:6px;border:2px solid var(--ok);background:#E7F8EF;border-radius:12px;padding:14px 16px;text-align:left;color:#1F2A30}
+.written .t{display:flex;align-items:center;gap:10px;font-weight:900;color:#1D7A4A;font-size:16px}
+.written .t .db{width:34px;height:34px;border-radius:8px;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:16px}
+.written .t .n{margin-left:auto;font-size:26px;font-weight:900;color:var(--ok)}
+.written ul{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:4px;font-size:13px}
+.written li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #9FDDB8;padding:4px 0}
+.written li:last-child{border:0}
+.written .ts{margin-top:8px;font-size:12px;color:#1D7A4A}
+
+/* ===== modals: match entry style ===== */
+.modal{background:rgba(60,50,40,.45)}
+.modal .box{background:#FFFFFF;border-radius:6px;box-shadow:0 30px 80px rgba(80,50,20,.25);padding:30px 34px 26px;color:var(--taupe)}
+.modal h3{font-family:"Noto Serif TC","Songti TC",serif;font-weight:600;font-size:24px;color:var(--taupe);letter-spacing:.02em}
+.modal .sub{color:var(--taupe-2);font-size:13.5px;margin:6px 0 18px}
+.modal .btn{border-radius:999px;padding:10px 20px;border:1px solid var(--hair);background:transparent;color:var(--taupe);font-weight:600}
+.modal .btn:hover{border-color:var(--taupe-2)}
+.modal .btn.accent{background:var(--taupe);border-color:var(--taupe);color:var(--cream)}
+.modal .btn.accent:hover{background:#3E3934}
+.modal .row{margin-top:24px;gap:12px}
+/* success */
+.done-modal .ckb{width:64px;height:64px;border:1px solid var(--taupe);color:var(--taupe);font-size:28px;margin:0 auto 14px;background:transparent}
+.done-modal p{color:var(--taupe-2);margin:6px 0 20px;font-size:14px}
+.written{border:1px solid var(--hair);background:transparent;border-radius:0;padding:18px 0 0;border-left:0;border-right:0;border-bottom:0;color:var(--taupe)}
+.written .t{font-family:"Noto Serif TC",serif;font-weight:600;color:var(--taupe);font-size:17px;gap:12px}
+.written .t .db{background:transparent;border:1px solid var(--taupe-2);color:var(--taupe);border-radius:50%;width:32px;height:32px;font-size:14px}
+.written .t .n{font-family:"Noto Serif TC",serif;color:var(--taupe);font-size:30px;font-weight:600}
+.written .t .n small{color:var(--taupe-2);font-family:"Noto Sans TC",sans-serif}
+.written ul{margin-top:14px;gap:0}
+.written li{border-bottom:1px solid var(--hair);padding:9px 0;color:var(--taupe);font-size:13.5px}
+.written li b{font-weight:700}
+.written .ts{color:var(--taupe-2);margin-top:12px;font-size:12px;letter-spacing:.03em}
+/* leave prompt */
+.leftlist{gap:0}
+.leftlist li{background:transparent;border-radius:0;border-bottom:1px solid var(--hair);padding:14px 4px;gap:16px}
+.leftlist li:first-child{border-top:1px solid var(--hair)}
+.leftlist .ln{background:transparent;border:1px solid var(--taupe-2);color:var(--taupe);font-family:"Noto Serif TC",serif;width:26px;height:26px}
+.leftlist b{color:var(--taupe);font-weight:600}
+.leftlist .lsub{color:var(--taupe-2);font-size:12.5px;margin-top:2px}
+table.mini td:nth-child(1),table.mini td:nth-child(2),table.mini td:nth-child(4),table.mini td:nth-child(5),table.mini td:nth-child(7){white-space:nowrap}
+
+/* ===== misclick guide ===== */
+button[disabled]{pointer-events:none}
+.flash{animation:flashHint .45s ease 4;position:relative;z-index:3}
+@keyframes flashHint{0%,100%{outline:3px solid transparent;outline-offset:3px;box-shadow:none}50%{outline:3px solid #F26A21;outline-offset:3px;box-shadow:0 0 0 8px rgba(242,106,33,.22)}}
+@media (prefers-reduced-motion:reduce){.flash{animation:flashHint .45s ease 1}}
+</style>
+
+<div class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section id="stage0" class="home">
+    <div class="poster">
+      <div class="art"><i class="a1"></i><i class="a2"></i><i class="a3"></i><i class="a4"></i>
+        <div class="mascots"><canvas id="mXue" aria-label="學寶" role="img"></canvas></div>
+      </div>
+      <div class="cap">課程點名專屬，<div class="rule"></div>點完名資料同步校務系統</div>
+    </div>
+    <div class="entry">
+      <div class="eyebrow">1Campus 點名系統 · 課程點名</div>
+      <h1>課堂點名<br>互動體驗</h1>
+      <p class="lead">授課老師用手機 App 點名，或交給學生小幫手代點、老師以密碼確認；缺曠即時寫回校務系統。請選一個角色，實際操作看看。</p>
+      <div class="hair"></div>
+      <button class="role" data-go="1"><span class="no">01</span><span class="t">班導師・授課老師<small>手機 App 點名、查看今日點名狀態、設定小幫手與點名密碼</small></span><span class="arr">→</span></button>
+      <button class="role" data-go="2"><span class="no">02</span><span class="t">小幫手代點名<small>學生代為點名後，輸入老師密碼直接寫回校務系統；或先略過，之後由班導師確認再寫回</small></span><span class="arr">→</span></button>
+      <div class="foot"><span>兩個角色共用 2026/09/22・320 班的示範資料。人名皆為虛構。</span><button class="linkbtn" id="resetAll">↺ 重設示範資料</button></div>
+    </div>
+  </section>
+
+  <!-- ================= STAGE 1 : TEACHER ================= -->
+  <section class="stage" id="stage1" hidden>
+    <div class="topbar"><div class="who">班導師・授課老師<small>黃婉婷 · 320 班導師 · 1Campus App</small></div><span class="sp"></span><button class="menubtn" data-go="0">⌂ 返回主選單</button></div>
+    <div class="duo">
+      <div class="phone"><div class="notch"></div><div class="screen" id="ph1">
+        <div class="statusbar"><span class="time">14:57</span><span>●●● ᯤ ▮</span></div>
+        <div class="apphdr"><span>課堂點名</span><span class="x" data-go="0" role="button" title="返回主選單">✕</span></div>
+        <div class="scr center" id="t-view"></div>
+        <div class="pdlg" id="t-dlg" hidden></div>
+      </div></div>
+      <div class="side">
+        <div class="flow"><h4>老師端流程</h4><ol id="t-steps"></ol></div>
+        <div class="sis" id="sis1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STAGE 2 : HELPER ================= -->
+  <section class="stage" id="stage2" hidden>
+    <div class="topbar"><div class="who" id="who2">小幫手代點名<small>劉宛妤 · 320 班 點名小幫手 · 1Campus App</small></div><span class="sp"></span><button class="menubtn" data-go="0">⌂ 返回主選單</button></div>
+    <div class="duo">
+      <div class="phone"><div class="notch"></div><div class="screen" id="ph2">
+        <div class="statusbar"><span class="time">15:46</span><span>●●● ᯤ ▮</span></div>
+        <div class="scr center" id="h-view"></div>
+        <div class="pdlg" id="h-dlg" hidden></div>
+      </div></div>
+      <div class="side">
+        <div class="flow"><h4>小幫手流程</h4><ol id="h-steps"></ol></div>
+        <div class="sis" id="sis2"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<div id="modalHost"></div>
+
+<script>
+'use strict';
+class XuebaoMascot {
+  constructor(canvas, options = {}) {
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      throw new TypeError('XuebaoMascot requires an HTMLCanvasElement.');
+    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas 2D is not available in this browser.');
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.width = 600;
+    this.height = 690;
+    this.destroyed = false;
+    this.paused = false;
+    this.tracking = options.tracking ?? true;
+    this.blinking = options.blinking ?? true;
+    this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.idleMotion = options.idleMotion ?? !this.motionQuery.matches;
+    this.motionWasOverridden = options.idleMotion !== undefined;
+    this.clock = 0;
+    this.lastTime = null;
+    this.frame = null;
+    this.blinkStarted = null;
+    this.blinkDuration = 190;
+    this.nextBlink = this.randomBlinkDelay();
+    this.blinkCount = 0;
+    this.eyeOpen = 1;
+    this.gaze = { x: 0, y: 0 };
+    this.pointer = { clientX: 0, clientY: 0, active: false };
+    this.view = { scale: 1, x: 0, y: 0, dpr: 1 };
+
+    // Cache geometry, not raster images. Every visible part is a Canvas path.
+    this.paths = {
+      body: new Path2D('M278 179 C288 174 309 174 321 178 L347 229 L431 254 C447 259 452 274 442 289 L395 346 L402 424 C404 444 394 451 378 446 L300 420 L224 448 C207 454 196 445 198 429 L204 351 L157 294 C143 277 148 261 167 255 L250 230 Z'),
+      leftBoot: new Path2D('M224 600 Q223 594 231 594 L251 594 Q260 594 259 604 L258 641 Q258 649 249 649 L204 649 Q195 649 197 640 Q199 630 211 627 L223 626 Z'),
+      rightBoot: new Path2D('M338 603 Q337 594 345 594 L364 594 Q373 594 373 603 L373 626 L381 628 Q394 631 395 640 Q396 649 387 649 L343 649 Q335 649 336 641 Z'),
+      raisedHand: new Path2D('M478 297 C471 290 467 284 468 279 C469 274 474 274 478 280 L475 266 C473 258 480 256 483 265 L487 274 L487 257 C487 249 495 249 495 257 L495 273 L500 259 C502 252 509 255 507 263 L503 280 L510 271 C515 266 520 271 515 278 L505 294 Q501 302 496 305 Q485 306 478 297 Z'),
+      capBand: new Path2D('M260 165 C277 153 320 153 340 165 L340 190 C321 177 281 177 261 188 Z'),
+      capTop: new Path2D('M223 157 L298 123 L377 158 L300 192 Z'),
+      mouth: new Path2D('M274 351 Q300 362 326 351 C332 348 333 353 329 365 C324 381 313 387 300 387 C286 387 275 379 271 366 C267 354 268 348 274 351 Z'),
+      bookOutline: new Path2D('M146 339 L161 326 Q162 325 166 326 L215 337 Q217 337 218 342 L230 426 Q230 429 226 432 L208 441 L153 426 Z'),
+      bookTop: new Path2D('M149 340 L163 330 L213 340 L199 350 Z'),
+      bookSide: new Path2D('M200 350 L214 341 L226 425 L210 435 Z'),
+      bookCover: new Path2D('M149 341 L199 352 L210 435 L157 422 Z'),
+      bookHand: new Path2D('M153 394 C149 386 154 378 161 382 L168 389 L175 385 C182 382 186 389 180 393 L174 397 C185 394 191 401 184 405 L176 409 C186 409 188 417 180 421 L171 423 C159 424 148 413 151 404 Z')
+    };
+
+    this._tick = this.tick.bind(this);
+    this._resize = () => this.resize();
+    this._pointer = event => {
+      if (event.isPrimary === false) return;
+      this.pointer.clientX = event.clientX;
+      this.pointer.clientY = event.clientY;
+      this.pointer.active = true;
+    };
+    this._leave = () => { this.pointer.active = false; };
+    this._pointerEnd = event => {
+      if (event.pointerType !== 'mouse') this.pointer.active = false;
+    };
+    this._visibility = () => {
+      if (document.hidden) this.stopLoop();
+      else this.startLoop();
+    };
+    this._motionChange = event => {
+      if (!this.motionWasOverridden) {
+        this.idleMotion = !event.matches;
+        this.draw();
+        this.emitState();
+      }
+    };
+
+    // Passive listeners preserve normal scrolling and clicking on the page.
+    window.addEventListener('pointermove', this._pointer, { passive: true });
+    window.addEventListener('pointerdown', this._pointer, { passive: true });
+    window.addEventListener('pointerup', this._pointerEnd, { passive: true });
+    window.addEventListener('pointercancel', this._leave, { passive: true });
+    document.documentElement.addEventListener('pointerleave', this._leave);
+    window.addEventListener('blur', this._leave);
+    window.addEventListener('resize', this._resize, { passive: true });
+    document.addEventListener('visibilitychange', this._visibility);
+    this.motionQuery.addEventListener('change', this._motionChange);
+    if ('ResizeObserver' in window) {
+      this.observer = new ResizeObserver(this._resize);
+      this.observer.observe(canvas);
+    }
+    this.resize();
+    this.startLoop();
+  }
+
+  randomBlinkDelay() { return 3000 + Math.random() * 2000; }
+
+  pose() {
+    const t = this.clock / 1000;
+    return {
+      bob: this.idleMotion ? Math.sin(t * Math.PI * 2 / 4.6) * 2.6 : 0,
+      tilt: this.idleMotion ? Math.sin(t * Math.PI * 2 / 6.4) * 0.007 : 0,
+      tassel: this.idleMotion ? Math.sin(t * Math.PI * 2 / 3.7) * 0.026 : 0
+    };
+  }
+
+  resize() {
+    if (this.destroyed) return;
+    const rect = this.canvas.getBoundingClientRect();
+    const width = Math.max(rect.width, 1);
+    const height = Math.max(rect.height, 1);
+    // Cap the backing-store resolution to avoid excessive work on high-DPI screens.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.round(width * dpr));
+    const h = Math.max(1, Math.round(height * dpr));
+    if (this.canvas.width !== w) this.canvas.width = w;
+    if (this.canvas.height !== h) this.canvas.height = h;
+    const scale = Math.min(width / this.width, height / this.height);
+    this.view = {
+      scale, dpr,
+      x: (width - this.width * scale) / 2,
+      y: (height - this.height * scale) / 2
+    };
+    this.draw();
+  }
+
+  startLoop() {
+    if (this.destroyed || this.paused || document.hidden || this.frame !== null) return;
+    this.lastTime = null;
+    this.frame = requestAnimationFrame(this._tick);
+  }
+
+  stopLoop() {
+    if (this.frame !== null) cancelAnimationFrame(this.frame);
+    this.frame = null;
+    this.lastTime = null;
+  }
+
+  tick(now) {
+    this.frame = null;
+    if (this.destroyed || this.paused || document.hidden) return;
+    const dt = this.lastTime === null ? 0 : Math.max(0, (now - this.lastTime) / 1000);
+    this.lastTime = now;
+    this.clock += dt * 1000;
+    this.updateBlink();
+    this.updateGaze(dt);
+    this.draw();
+    this.frame = requestAnimationFrame(this._tick);
+  }
+
+  beginBlink(manual = false) {
+    if (this.blinkStarted !== null) return false;
+    this.blinkStarted = this.clock;
+    this.blinkDuration = 175 + Math.random() * 35;
+    this.nextBlink = this.clock + this.randomBlinkDelay();
+    this.blinkCount += 1;
+    // A small event API is also useful when embedding the character elsewhere.
+    this.canvas.dispatchEvent(new CustomEvent('xuebao:blink', {
+      detail: {
+        manual, at: this.clock,
+        nextDelayMs: this.nextBlink - this.clock
+      }
+    }));
+    return true;
+  }
+
+  updateBlink() {
+    if (this.blinking && this.blinkStarted === null && this.clock >= this.nextBlink) {
+      this.beginBlink(false);
+    }
+    if (this.blinkStarted === null) { this.eyeOpen = 1; return; }
+    const u = (this.clock - this.blinkStarted) / this.blinkDuration;
+    const smooth = n => { const v = Math.max(0, Math.min(1, n)); return v * v * (3 - 2 * v); };
+    // Close -> hold briefly -> reopen. Both eyes use the same blink state.
+    if (u >= 1) {
+      this.blinkStarted = null;
+      this.eyeOpen = 1;
+    } else if (u < 0.40) {
+      this.eyeOpen = 1 - smooth(u / 0.40);
+    } else if (u < 0.57) {
+      this.eyeOpen = 0;
+    } else {
+      this.eyeOpen = smooth((u - 0.57) / 0.43);
+    }
+  }
+
+  updateGaze(dt) {
+    let targetX = 0;
+    let targetY = 0;
+    if (this.tracking && this.pointer.active) {
+      const rect = this.canvas.getBoundingClientRect();
+      const { scale, x, y } = this.view;
+      const p = this.pose();
+      const worldX = (this.pointer.clientX - rect.left - x) / scale;
+      const worldY = (this.pointer.clientY - rect.top - y) / scale;
+      // Invert the torso's gentle idle rotation/translation as well.
+      const dx = worldX - 300;
+      const dy = worldY - (420 + p.bob);
+      const cos = Math.cos(p.tilt);
+      const sin = Math.sin(p.tilt);
+      const localX = dx * cos + dy * sin + 300;
+      const localY = -dx * sin + dy * cos + 420;
+      const vx = localX - 300;
+      const vy = localY - 310;
+      const distance = Math.hypot(vx, vy);
+      const strength = Math.min(distance / 145, 1);
+      if (distance > 0.001) {
+        // An elliptical limit keeps each pupil inside the eye white.
+        targetX = (vx / distance) * 4.5 * strength;
+        targetY = (vy / distance) * 4.0 * strength;
+      }
+    }
+    // Exponential easing gives equivalent responsiveness at different frame rates.
+    const ease = this.motionQuery.matches ? 1 : 1 - Math.exp(-13 * dt);
+    this.gaze.x += (targetX - this.gaze.x) * ease;
+    this.gaze.y += (targetY - this.gaze.y) * ease;
+  }
+
+  gradient(x0, y0, x1, y1, stops) {
+    const gradient = this.ctx.createLinearGradient(x0, y0, x1, y1);
+    stops.forEach(([offset, color]) => gradient.addColorStop(offset, color));
+    return gradient;
+  }
+
+  ellipse(x, y, rx, ry, fill) {
+    const c = this.ctx;
+    c.beginPath();
+    c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    c.fillStyle = fill;
+    c.fill();
+  }
+
+  draw() {
+    if (this.destroyed) return;
+    const c = this.ctx;
+    const v = this.view;
+    const p = this.pose();
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    c.setTransform(v.dpr * v.scale, 0, 0, v.dpr * v.scale, v.dpr * v.x, v.dpr * v.y);
+    c.lineCap = 'round';
+    c.lineJoin = 'round';
+
+    this.ellipse(300, 650, 145, 11, 'rgba(62, 75, 65, 0.075)');
+    this.ellipse(300, 650, 100, 6, 'rgba(62, 75, 65, 0.028)');
+    this.drawLegs(p);
+
+    c.save();
+    c.translate(300, 420 + p.bob);
+    c.rotate(p.tilt);
+    c.translate(-300, -420);
+    this.drawArms();
+    this.drawBody();
+    this.drawCap(p);
+    this.drawFace();
+    this.drawBook();
+    c.restore();
+  }
+
+  drawLegs(p) {
+    const c = this.ctx;
+    c.strokeStyle = this.gradient(235, 442, 358, 604, [[0, '#FFC514'], [0.5, '#FFD335'], [1, '#FFB919']]);
+    c.lineWidth = 17;
+    c.beginPath();
+    c.moveTo(250 - p.tilt * 15, 437 + p.bob);
+    c.quadraticCurveTo(242, 521, 239, 608);
+    c.moveTo(339 - p.tilt * 15, 437 + p.bob);
+    c.quadraticCurveTo(347, 525, 352, 608);
+    c.stroke();
+    c.strokeStyle = 'rgba(255, 232, 94, 0.5)';
+    c.lineWidth = 3.5;
+    c.beginPath();
+    c.moveTo(246, 449 + p.bob);
+    c.lineTo(236, 590);
+    c.moveTo(336, 449 + p.bob);
+    c.lineTo(348, 590);
+    c.stroke();
+    c.fillStyle = this.gradient(230, 594, 230, 650, [[0, '#FFAA09'], [1, '#FF9600']]);
+    c.fill(this.paths.leftBoot);
+    c.fill(this.paths.rightBoot);
+    c.fillStyle = 'rgba(230, 132, 0, 0.1)';
+    c.beginPath();
+    c.roundRect(202, 645, 50, 3, 1.5);
+    c.roundRect(341, 645, 48, 3, 1.5);
+    c.fill();
+  }
+
+  drawArms() {
+    const c = this.ctx;
+    c.strokeStyle = this.gradient(158, 270, 498, 404, [[0, '#FFCE24'], [1, '#FFCA13']]);
+    c.lineWidth = 16;
+    c.beginPath();
+    c.moveTo(204, 365);
+    c.bezierCurveTo(162, 341, 137, 378, 151, 402);
+    c.moveTo(403, 345);
+    c.bezierCurveTo(447, 361, 474, 328, 486, 295);
+    c.stroke();
+    c.fillStyle = this.gradient(475, 251, 507, 305, [[0, '#FFDF3C'], [1, '#FFCA18']]);
+    c.fill(this.paths.raisedHand);
+    c.strokeStyle = 'rgba(241, 173, 0, 0.45)';
+    c.lineWidth = 1.2;
+    c.beginPath();
+    c.moveTo(483, 288);
+    c.quadraticCurveTo(488, 282, 494, 285);
+    c.stroke();
+  }
+
+  drawBody() {
+    const c = this.ctx;
+    c.fillStyle = this.gradient(196, 206, 390, 443, [
+      [0, '#FFD52A'], [0.43, '#FFDC35'], [0.78, '#FFCD18'], [1, '#FFD331']
+    ]);
+    c.fill(this.paths.body);
+    c.strokeStyle = 'rgba(236, 167, 0, 0.28)';
+    c.lineWidth = 1.1;
+    c.stroke(this.paths.body);
+    c.save();
+    c.clip(this.paths.body);
+    const glow = c.createRadialGradient(238, 253, 0, 238, 253, 165);
+    glow.addColorStop(0, 'rgba(255, 244, 144, 0.17)');
+    glow.addColorStop(1, 'rgba(255, 244, 144, 0)');
+    c.fillStyle = glow;
+    c.fillRect(145, 175, 305, 280);
+    c.restore();
+  }
+
+  drawCap(p) {
+    const c = this.ctx;
+    c.fillStyle = this.gradient(260, 162, 336, 192, [[0, '#16364E'], [1, '#234860']]);
+    c.fill(this.paths.capBand);
+    c.fillStyle = this.gradient(253, 133, 348, 185, [[0, '#263E52'], [1, '#162F44']]);
+    c.fill(this.paths.capTop);
+    c.strokeStyle = '#102838';
+    c.lineWidth = 2.2;
+    c.stroke(this.paths.capTop);
+    c.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+    c.lineWidth = 1.8;
+    c.beginPath();
+    c.moveTo(230, 157);
+    c.lineTo(298, 127);
+    c.lineTo(368, 158);
+    c.stroke();
+    this.ellipse(299, 157, 4.4, 2.9, '#193145');
+    c.save();
+    c.translate(371, 162);
+    c.rotate(p.tassel);
+    c.strokeStyle = '#FF9229';
+    c.lineWidth = 2.6;
+    c.beginPath();
+    c.moveTo(0, 0);
+    c.lineTo(0, 35);
+    c.stroke();
+    this.ellipse(0, 35, 3.5, 4.5, '#FF8B23');
+    c.fillStyle = this.gradient(-4, 36, 4, 54, [[0, '#FFAC3B'], [1, '#FF8420']]);
+    c.beginPath();
+    c.moveTo(-2.4, 37);
+    c.lineTo(-5.2, 52);
+    c.quadraticCurveTo(0, 56, 5.2, 52);
+    c.lineTo(2.4, 37);
+    c.closePath();
+    c.fill();
+    c.restore();
+  }
+
+  drawFace() {
+    const c = this.ctx;
+    this.ellipse(300, 326, 83, 82, this.gradient(256, 253, 336, 405, [[0, '#FFF8E9'], [1, '#FFF0D4']]));
+    c.strokeStyle = 'rgba(255, 255, 255, 0.86)';
+    c.lineWidth = 1.7;
+    c.stroke();
+    this.ellipse(236, 343, 14, 14, '#FF9184');
+    this.ellipse(364, 343, 14, 14, '#FF9184');
+    this.ellipse(233, 339, 7, 4, 'rgba(255, 192, 169, 0.35)');
+    this.ellipse(361, 339, 7, 4, 'rgba(255, 192, 169, 0.35)');
+    this.drawEye(258, 310);
+    this.drawEye(342, 310);
+    this.ellipse(300, 343, 12, 5.5, 'rgba(246, 181, 137, 0.4)');
+    c.fillStyle = '#982A22';
+    c.fill(this.paths.mouth);
+    c.strokeStyle = '#8D241E';
+    c.lineWidth = 1.1;
+    c.stroke(this.paths.mouth);
+    c.save();
+    c.clip(this.paths.mouth);
+    this.ellipse(300, 383, 24, 14, '#FF6759');
+    this.ellipse(300, 384, 18, 8, 'rgba(255, 135, 110, 0.4)');
+    c.restore();
+  }
+
+  drawEye(x, y) {
+    const c = this.ctx;
+    const open = Math.max(0, Math.min(1, this.eyeOpen));
+    c.save();
+    c.translate(x, y);
+    if (open < 0.08) {
+      c.strokeStyle = '#252C2A';
+      c.lineWidth = 3.8;
+      c.beginPath();
+      c.moveTo(-10, 0);
+      c.quadraticCurveTo(0, 5, 10, 0);
+      c.stroke();
+    } else {
+      c.scale(1, open);
+      this.ellipse(0, 0, 14.5, 18, 'rgba(255, 255, 255, 0.91)');
+      // Clip for safety even if a future edit increases pupil travel.
+      c.clip();
+      this.ellipse(this.gaze.x, this.gaze.y, 8.7, 11, '#212B28');
+      this.ellipse(this.gaze.x - 2.8, this.gaze.y - 4.1, 2.5, 2.6, '#FFFFFF');
+      this.ellipse(this.gaze.x + 2.2, this.gaze.y + 4, 1.1, 1.1, 'rgba(255, 255, 255, 0.2)');
+    }
+    c.restore();
+  }
+
+  drawBook() {
+    const c = this.ctx;
+    c.fillStyle = '#1B8C46';
+    c.fill(this.paths.bookOutline);
+    c.fillStyle = '#F5FFF0';
+    c.fill(this.paths.bookTop);
+    c.fillStyle = '#F7FAEB';
+    c.fill(this.paths.bookSide);
+    c.strokeStyle = 'rgba(80, 144, 83, 0.18)';
+    c.lineWidth = 1;
+    c.beginPath();
+    c.moveTo(214, 348);
+    c.lineTo(224, 421);
+    c.moveTo(211, 351);
+    c.lineTo(221, 424);
+    c.stroke();
+    c.fillStyle = this.gradient(149, 350, 207, 432, [[0, '#2FA643'], [1, '#178843']]);
+    c.fill(this.paths.bookCover);
+    c.strokeStyle = 'rgba(116, 206, 79, 0.62)';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.moveTo(154, 348);
+    c.lineTo(161, 399);
+    c.stroke();
+    c.fillStyle = this.gradient(151, 383, 181, 423, [[0, '#FFDA29'], [1, '#FFC717']]);
+    c.fill(this.paths.bookHand);
+  }
+
+  getState() {
+    return {
+      paused: this.paused, tracking: this.tracking,
+      blinking: this.blinking, idleMotion: this.idleMotion,
+      eyeOpen: this.eyeOpen, gaze: { ...this.gaze },
+      activeTimeMs: this.clock, blinkCount: this.blinkCount,
+      nextBlinkInMs: Math.max(0, this.nextBlink - this.clock)
+    };
+  }
+
+  emitState() {
+    this.canvas.dispatchEvent(new CustomEvent('xuebao:statechange', { detail: this.getState() }));
+  }
+
+  pause() {
+    if (this.destroyed) return;
+    this.paused = true;
+    this.stopLoop();
+    this.emitState();
+  }
+
+  resume() {
+    if (this.destroyed) return;
+    this.paused = false;
+    this.startLoop();
+    this.emitState();
+  }
+
+  blink() {
+    if (this.destroyed || this.paused || document.hidden) return false;
+    return this.beginBlink(true);
+  }
+
+  setTracking(enabled) {
+    if (this.destroyed) return;
+    this.tracking = Boolean(enabled);
+    if (!this.tracking) this.gaze = { x: 0, y: 0 };
+    this.draw();
+    this.emitState();
+  }
+
+  setBlinking(enabled) {
+    if (this.destroyed) return;
+    this.blinking = Boolean(enabled);
+    if (this.blinking) this.nextBlink = this.clock + this.randomBlinkDelay();
+    this.emitState();
+  }
+
+  setIdleMotion(enabled) {
+    if (this.destroyed) return;
+    this.idleMotion = Boolean(enabled);
+    this.motionWasOverridden = true;
+    this.draw();
+    this.emitState();
+  }
+
+  destroy() {
+    if (this.destroyed) return;
+    this.stopLoop();
+    this.destroyed = true;
+    this.observer?.disconnect();
+    window.removeEventListener('pointermove', this._pointer);
+    window.removeEventListener('pointerdown', this._pointer);
+    window.removeEventListener('pointerup', this._pointerEnd);
+    window.removeEventListener('pointercancel', this._leave);
+    document.documentElement.removeEventListener('pointerleave', this._leave);
+    window.removeEventListener('blur', this._leave);
+    window.removeEventListener('resize', this._resize);
+    document.removeEventListener('visibilitychange', this._visibility);
+    this.motionQuery.removeEventListener('change', this._motionChange);
+  }
+}
+
+
+</script>
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+
+/* ---------- data ---------- */
+const STUDENTS=[
+ {id:'050131',n:'管宜恆',seat:1,g:'f',long:true},{id:'123023',n:'梁宗霖',seat:2,g:'m'},{id:'123030',n:'劉宛晴',seat:3,g:'f',long:true},
+ {id:'050130',n:'劉宛君',seat:4,g:'f'},{id:'050129',n:'翟皓柏',seat:5,g:'m'},{id:'050306',n:'王智芬',seat:6,g:'f',long:true},
+ {id:'109121',n:'李承恩',seat:7,g:'m'},{id:'109089',n:'陳姿妘',seat:8,g:'f'},{id:'114020',n:'劉宛妤',seat:9,g:'f',long:true},{id:'114031',n:'吳承翰',seat:10,g:'m'},
+];
+const LABEL={att:'出席',abs:'曠課',late:'遲到'};
+const TODAY=[
+ {k:'p0',n:'早修',cls:'320',te:true,he:false},
+ {k:'p1',n:'一',cls:'廣二1 生物 I',te:true,he:false},
+ {k:'p2',n:'二',cls:'廣三1 國文 IV',te:true,he:true},
+ {k:'p3',n:'三',cls:'應二1 健康與護理 I',te:true,he:false},
+ {k:'p4',n:'四',cls:'廣二1 設計概論 I',te:false,he:true},
+ {k:'p6',n:'午休',cls:'320',dyn:true},
+ {k:'p7',n:'五',cls:'廣三1 化學 I',future:true},
+ {k:'p8',n:'六',cls:'廣二1 體育 IV',future:true},
+ {k:'p9',n:'七',cls:'高一1 團體活動時間 I',future:true},
+];
+const COURSES=[
+ {n:'320',sub:'導師班',helper:'劉宛妤(114020)',periods:['p0','p6']},
+ {n:'廣二1 生物 I',helper:'--',periods:['p1','p3','p5']},
+ {n:'廣三1 國文 IV',helper:'陳o君(913012)',periods:['p2','p4']},
+ {n:'應二1 健康與護理 I',helper:'--',periods:['p3']},
+ {n:'廣二1 設計概論 I',helper:'--',periods:['p4','p7']},
+ {n:'廣三1 化學 I',helper:'孫o寧(914068)',periods:['p7','p8']},
+ {n:'廣二1 體育 IV',helper:'--',periods:['p8']},
+ {n:'高一1 團體活動時間 I',helper:'--',periods:['p9']},
+];
+const DAYS3=[{day:22,label:'2026-09-22 - 星期二'},{day:21,label:'2026-09-21 - 星期一'},{day:20,label:'2026-09-20 - 星期日'}];
+const ALLP=[['p0','早修'],['pf','升旗'],['p1','一'],['p2','二'],['p3','三'],['p4','四'],['p6','午休'],['p7','五'],['p8','六'],['p9','七'],['p10','八'],['pd','降旗']];
+const PNAME=Object.fromEntries(ALLP);
+function fakeMarks(seedStr){ let seed=0; for(const ch of seedStr)seed=(seed*31+ch.charCodeAt(0))>>>0; const r=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}; const m={}; STUDENTS.forEach(s=>{const x=r(); m[s.id]=x<.08?'abs':x<.16?'late':'att';}); return m; }
+let S;
+function fresh(){
+  return {
+    // 午休 attendance for 320 (shared by both roles)
+    marks:{}, helperMarks:null,
+    teacher:{view:'home',dd:'abs',pending:{},setHelperCourse:null,period:'p6',course:'320',coursePending:{},courseDone:{},day:22},
+    helper:{view:'home',dd:'abs',pending:{},period:'p6'},
+    helperDone:false, helperSkipped:false, teacherDone:false, written:[], lastSubmit:null,
+    // static
+    early:{teacher:true,helper:false}, flag:{teacher:false,helper:true},
+    helperFor:{'320':'劉宛妤(114020)'},
+    pw:'1234', showPhoto:true
+  };
+}
+S=fresh();
+
+/* ---------- helpers ---------- */
+function toast(title,msg,kind=''){ const t=document.createElement('div');t.className='toast '+kind;t.innerHTML=`<b>${title}</b><span>${msg}</span>`;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),4000); }
+function stamp(){ const n=new Date(); return `2026/09/22 ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
+function closeModal(){ $('#modalHost').innerHTML=''; }
+$('#modalHost').addEventListener('click',e=>{ if(e.target.matches('[data-close]')||e.target.classList.contains('modal'))closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+function go(n){
+  [0,1,2].forEach(i=>{$('#stage'+i).hidden=i!==n;});
+    mascotsActive(n===0); closeModal();
+  if(n===1)renderT(); if(n===2)renderH();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-go]'); if(!b)return; const n=+b.dataset.go;
+  if(n===0&&!b.hasAttribute('data-force')){ const left=pendingSteps(); if(left){openLeave(left);return;} }
+  go(n); });
+
+/* ---------- SIS panel ---------- */
+function renderSIS(el){
+  const rows=S.written; const last=S.lastSubmit;
+  el.innerHTML=`<div class="hd">🗄 校務系統 › 學務 › 出缺席紀錄 › 2026/09/22 <span class="pill ${rows.length?'g':'n'}">${rows.length?'✓ 今日已寫入 '+rows.length+' 筆':'尚無新寫入'}</span></div>
+  <div class="lane" style="margin:10px 12px 0"><div class="node"><div class="lbl">課堂點名 App</div><div class="nm">${last?last.course+' · '+last.period:'—'}</div><div class="sm">${last?'點名已送出 · '+last.at:'等待送出'}</div></div><div class="pipe" id="pipe-${el.id}"><span class="pk">曠課</span><span class="pk">遲到</span></div><div class="node"><div class="lbl">校務系統</div><div class="nm">出缺席紀錄</div><div class="sm">${rows.length?'已寫入 '+rows.length+' 筆':'—'}</div></div></div>
+  ${rows.length?`<table class="mini"><thead><tr><th>學號</th><th>姓名</th><th>課程／班級</th><th>節次</th><th>缺曠</th><th>來源</th><th>寫入時間</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.id}</td><td>${r.n}</td><td>${r.course}</td><td>${r.period}</td><td><b>${LABEL[r.v]}</b></td><td>${r.src}</td><td>${r.at}</td></tr>`).join('')}</tbody></table>`:`<div class="empty">今天尚無由此示範送出的紀錄。早修、第一～四節等既有紀錄已在系統中。</div>`}`;
+}
+function writeBack(marks,src,afterEl,course='320',period='午休'){
+  const at=stamp();
+  const rows=STUDENTS.filter(s=>marks[s.id]&&marks[s.id]!=='att').map(s=>({id:s.id,n:s.n,v:marks[s.id],src,course,period,at}));
+  S.written=[...rows,...S.written]; S.lastSubmit={course,period,at}; if(course==='320'&&period==='午休')S.marks={...marks};
+  const li=rows.map(r=>`<li><span>${r.n}（${r.id}）</span><span>${period} · <b>${LABEL[r.v]}</b></span></li>`).join('')||'<li><span>全員出席</span><span>—</span></li>';
+  $('#modalHost').innerHTML=`<div class="modal"><div class="box done-modal" role="dialog" aria-modal="true">
+    <div class="ckb">✓</div><h3>送出成功</h3><p>${course} ${period} 點名已完成。</p>
+    <div class="written"><div class="t"><span class="db">🗄</span><span>已寫入校務系統 › 出缺席紀錄</span><span class="n">${rows.length} <small style="font-size:13px">筆</small></span></div><ul>${li}</ul><div class="ts">寫入時間 ${at} · 來源：${src} · 家長端可即時查詢</div></div>
+    <div class="row" style="justify-content:center"><button class="btn accent" id="okW" style="min-width:140px">OK</button></div></div></div>`;
+  $('#okW').onclick=()=>{ closeModal(); renderSIS(afterEl); const pipe=$('#pipe-'+afterEl.id); if(pipe){pipe.classList.remove('go'); void pipe.offsetWidth; pipe.classList.add('go');} toast('校務系統已更新',`${course} ${period} 共 ${rows.length} 筆缺曠寫入校務系統。`); };
+}
+function avatar(s){ return `<div class="face"></div><div class="hair ${s.long?'long':''}"></div><div class="blur"></div>`; }
+
+/* ================= TEACHER ================= */
+const T=()=>S.teacher;
+function tSteps(){
+  const st=[];
+  st.push({k:'open',t:'在「今日點名」點 320 午休 那一列',done:T().view!=='home'||S.teacherDone});
+  st.push({k:'mark',t:'點學生大頭照標記曠課／遲到（可先用左上下拉切換）',done:Object.keys(T().pending).length>0||S.teacherDone});
+  st.push({k:'send',t:'按右上「送出」，缺曠寫入校務系統',done:S.teacherDone});
+  st.push({k:'course',t:'（選用）在「我的課程」點任一門課，選節次後即可為該課點名',done:!!T().pickedCourse});
+  st.push({k:'set',t:'（選用）回到首頁點「設定」，看點名密碼與小幫手設定',done:T().view==='settings'||T().view==='pickHelper'||T().visitedSet});
+  return st;
+}
+function renderSteps(el,steps){ let cur=steps.findIndex(s=>!s.done); el.innerHTML=steps.map((s,i)=>`<li class="${s.done?'done':''} ${i===cur?'cur':''}"><span class="d">${s.done?'✓':i+1}</span><span>${s.t}</span></li>`).join(''); }
+function renderT(){
+  const v=$('#t-view'); const t=T();
+  const noonT=S.teacherDone, noonH=S.helperDone||S.helperSkipped;
+  if(t.view==='home'){
+    v.innerHTML=`
+      <div class="daterow"><span class="dlabel">點名日期</span>
+        <div class="dsel-wrap"><button class="dsel" id="t-date">${DAYS3.find(d=>d.day===t.day).label} <span>▾</span></button>
+          <div class="ddmenu dmenu" id="t-dmenu" hidden>${DAYS3.map(d=>`<button data-day="${d.day}" class="${d.day===t.day?'cur':''}">${d.day===t.day?'✓ ':''}${d.label}</button>`).join('')}</div></div>
+      </div>
+      <div class="chips" style="margin:0 4px 10px"><span class="chip">點名學年度<b>111</b></span><span class="chip">點名學期<b>1</b></span></div>
+      <div class="rowbtns" style="justify-content:flex-start;margin:0 0 12px"><button class="btn-s blue" style="background:#1C6FB8;border-color:#1C6FB8">代課點名</button><button class="btn-s blue" style="background:#1C6FB8;border-color:#1C6FB8">代班導點名</button><button class="btn-s" style="background:#6FB0F0;border-color:#6FB0F0;color:#fff" data-t="settings">設定</button></div>
+      ${t.day!==22?`<div class="pbanner info"><span>ⓘ</span><div><b>檢視 9/${t.day} 的點名紀錄</b>依學校設定，三天內可查看與補點名。</div></div>`:''}
+      <table class="app"><thead><tr><th>今日點名</th><th>節次</th><th class="c">教師已<br>點名</th><th class="c">小幫手<br>點名</th></tr></thead><tbody>
+        ${TODAY.map(r=>{const past=t.day!==22; const te=past?true:(r.dyn?noonT:(r.te||!!t.courseDone[r.cls+'|'+r.k])), he=past?(r.he||r.k==='p6'):(r.dyn?noonH:r.he); return `<tr class="row ${r.dyn&&!noonT&&!past?'hot':''}" data-t="roll" data-period="${r.k}" data-cls="${r.cls}"><td>${r.cls}</td><td>${r.n}</td><td class="c"><span class="ck ${te?'on':''}">✓</span></td><td class="c"><span class="ck ${he?'on':''}">✓</span></td></tr>`;}).join('')}
+      </tbody></table>
+      ${S.helperSkipped&&!S.teacherDone?`<div class="pbanner warn"><span>⚠</span><div><b>小幫手已代點 320 午休，等待您確認</b>點下方午休列，確認後送出即寫入校務系統。</div></div>`:''}
+      ${S.teacherDone?`<div class="pbanner ok"><span>✓</span><div><b>320 午休 已送出</b>缺曠已寫入校務系統。</div><button class="btn-s" data-go="0">返回主選單</button></div>`:''}
+      <table class="app" style="margin-top:6px"><thead><tr><th>我的課程</th><th style="text-align:right">小幫手</th></tr></thead></table>
+      ${COURSES.map(c=>`<div class="course" data-pickperiod="${c.n}"><span>${c.n}${c.sub?` <small style="color:var(--muted)">${c.sub}</small>`:''}</span><span class="hp">小幫手：<b>${c.n==='320'?(S.helperFor['320']||'--'):(S.helperFor[c.n]||c.helper)}</b></span></div>`).join('')}
+      <div class="foot-pw">Powered By ischool</div>`;
+  } else if(t.view==='roll'){
+    const past=t.day!==22;
+    const isNoon=!past&&t.period==='p6'&&t.course==='320'; const key=t.course+'|'+t.period+(past?'|'+t.day:'');
+    const row=TODAY.find(r=>r.k===t.period&&r.cls===t.course);
+    const doneOther=past||!!t.courseDone[key]||(row&&row.te);
+    let marks,cnt,locked=false,fromHelper=false,banner='';
+    if(isNoon){
+      marks=Object.keys(t.pending).length?t.pending:(S.teacherDone?S.marks:(S.helperMarks||{}));
+      fromHelper=!!S.helperMarks&&!Object.keys(t.pending).length&&!S.teacherDone;
+      if(fromHelper)banner=`<div class="pbanner info"><span>ⓘ</span><div><b>小幫手 劉宛妤 已代點</b>紅色標記為小幫手所點，可修改後送出。</div></div>`;
+      if(S.teacherDone)banner=`<div class="pbanner ok"><span>✓</span><div><b>已送出</b>缺曠已寫入校務系統；可修改後再次送出更新。</div></div>`;
+    } else {
+      marks=t.coursePending[key]||t.courseDone[key]||((past||(row&&row.te))?fakeMarks(key):{});
+      if(doneOther)banner=`<div class="pbanner ok"><span>✓</span><div><b>${past?`9/${t.day} 此節已完成點名`:'此節已完成點名'}</b>缺曠已寫入校務系統；可修改後重新送出。</div></div>`;
+    }
+    cnt=Object.values(marks).filter(x=>x&&x!=='att').length;
+    v.innerHTML=`
+      <div class="crumb"><button class="back" data-t="home">課堂點名</button> › <b>${t.course}（2026/09/${String(t.day).padStart(2,'0')}：${PNAME[t.period]}）</b></div>
+      <div class="chk"><i></i> Display EnglishName</div>
+      ${banner}
+      <div class="tools">
+        <button class="dd filled" id="t-dd" ${locked?'disabled':''}>${LABEL[t.dd].slice(0,1)} ▾</button>
+        <div class="ddmenu" id="t-ddm" hidden><button data-dd="abs" class="${t.dd==='abs'?'cur':''}">曠課</button><button data-dd="late" class="${t.dd==='late'?'cur':''}">遲到</button></div>
+        <span class="sp"></span>
+        <button class="btn-s dark" id="t-send" ${locked?'disabled':''}>${cnt?`送出 ( ${LABEL[t.dd]}: ${cnt} )`:'全到 ( 送出 )'}</button>
+      </div>
+      <div class="rednote">出席率分母採用 教師實際點名次數 為 ${isNoon?1:3} 堂</div>
+      <div class="cards">${STUDENTS.map(s=>{const m=marks[s.id]; return `<button class="card" data-stu="${s.id}" ${locked?'disabled':''}><div class="ph">${avatar(s)}${m&&m!=='att'?`<div class="st ${m}">${LABEL[m]}</div>`:''}</div><div class="meta"><div class="n"><span>${s.n}</span><span class="${m&&m!=='att'?'low':''}">${m&&m!=='att'?'20.00':'100.00'}%</span></div><div class="i"><span>${s.id}</span><span>${t.course==='320'?'320':t.course.split(' ')[0]} ${s.seat}</span></div></div></button>`;}).join('')}</div>
+      <div class="foot-pw">Powered By ischool</div>`;
+  } else if(t.view==='settings'){
+    t.visitedSet=true;
+    v.innerHTML=`
+      <div class="crumb"><button class="back" data-t="home">課堂點名</button> › <b>設定</b></div>
+      <div class="set"><div class="sh">點名設定 <button class="btn-s dark" id="t-saveset">儲存</button></div>
+        <div class="r"><span>是否顯示照片</span><span class="radio"><span><i class="${S.showPhoto?'on':''}" data-photo="1"></i>是</span><span><i class="${S.showPhoto?'':'on'}" data-photo="0"></i>否</span></span></div>
+        <div class="r"><span>設定點名密碼<small>(小幫手點名完成後直接確認)</small></span><span class="pw">••••</span></div>
+        <div class="r"><span>校訂1/3缺課母數規則：</span><span style="font-size:12px;color:var(--ink-2)">依教師實際點名次數</span></div>
+      </div>
+      <div class="set"><div class="sh">點名小幫手</div>
+        <div class="r" style="cursor:pointer" data-t="pickHelper" data-course="320"><span>320 <small style="display:inline;color:var(--muted)">導師班</small></span><span style="font-size:12px">小幫手：<b>${S.helperFor['320']||'--'}</b></span></div>
+        ${['廣三1 化學 I','廣三1 專題實作 I','廣三1 物理 I','廣二1-表現技法實習 I','應二1-健康與護理 I','應二1-生物 I','高一1-團體活動時間 I'].map(c=>`<div class="r" style="cursor:pointer" data-t="pickHelper" data-course="${c}"><span>${c}</span><span style="font-size:12px">小幫手：<b>${S.helperFor[c]||'--'}</b></span></div>`).join('')}
+      </div>
+      <div class="foot-pw">Powered By ischool</div>`;
+  } else if(t.view==='pickHelper'){
+    const c=t.setHelperCourse; const cur=S.helperFor[c]||'';
+    v.innerHTML=`
+      <div class="crumb"><button class="back" data-t="settings">設定小幫手</button> › <b>${c}</b></div>
+      <div class="tools"><span class="sp"></span><button class="btn-s dark" id="t-savehelper">儲存</button></div>
+      <div class="cards">${STUDENTS.map(s=>{const sel=cur.startsWith(s.n); return `<button class="card ${sel?'selected':''}" data-pick="${s.id}"><div class="ph">${avatar(s)}${sel?'<div class="st helper">小幫手</div>':''}</div><div class="meta"><div class="n"><span>${s.n}</span></div><div class="i"><span>${s.id}</span><span>320 ${s.seat}</span></div></div></button>`;}).join('')}</div>
+      <div class="foot-pw">Powered By ischool</div>`;
+  }
+  renderSteps($('#t-steps'),tSteps()); renderSIS($('#sis1'));
+}
+$('#t-view').addEventListener('click',e=>{
+  const t=T();
+  const pp=e.target.closest('[data-pickperiod]'); if(pp){ openPeriodPicker(pp.dataset.pickperiod); return; }
+  if(e.target.closest('#t-date')){ $('#t-dmenu').hidden=!$('#t-dmenu').hidden; return; }
+  const dy=e.target.closest('[data-day]'); if(dy){ t.day=+dy.dataset.day; t.view='home'; renderT(); toast('已切換日期',`顯示 2026-09-${t.day} 的點名紀錄。`,'info'); return; }
+  const nav=e.target.closest('[data-t]'); if(nav){
+    if(nav.dataset.t==='roll'){ t.period=nav.dataset.period||'p6'; t.course=nav.dataset.cls||'320'; }
+    t.view=nav.dataset.t; if(nav.dataset.course)t.setHelperCourse=nav.dataset.course; renderT(); return; }
+  if(e.target.closest('#t-dd')){ $('#t-ddm').hidden=!$('#t-ddm').hidden; return; }
+  const dd=e.target.closest('[data-dd]'); if(dd){ t.dd=dd.dataset.dd; renderT(); return; }
+  const isNoon=t.day===22&&t.period==='p6'&&t.course==='320'; const key=t.course+'|'+t.period+(t.day!==22?'|'+t.day:'');
+  const card=e.target.closest('[data-stu]'); if(card&&!card.disabled){
+    const id=card.dataset.stu;
+    const past=t.day!==22; const row=TODAY.find(r=>r.k===t.period&&r.cls===t.course);
+    if(isNoon){ if(!Object.keys(t.pending).length)t.pending={...(S.teacherDone?S.marks:(S.helperMarks||{}))}; t.pending[id]=(t.pending[id]&&t.pending[id]!=='att')?'att':t.dd; }
+    else { if(!t.coursePending[key])t.coursePending[key]={...(t.courseDone[key]||((past||(row&&row.te))?fakeMarks(key):{}))}; const m=t.coursePending[key]; m[id]=(m[id]&&m[id]!=='att')?'att':t.dd; }
+    renderT(); return; }
+  if(e.target.closest('#t-send')&&!e.target.closest('#t-send').disabled){
+    if(isNoon){ const marks=Object.keys(t.pending).length?t.pending:(S.teacherDone?S.marks:(S.helperMarks||{})); const src=S.teacherDone?'課堂點名（教師重新送出）':(S.helperMarks?'課堂點名（小幫手代點・教師確認）':'課堂點名（教師）'); S.teacherDone=true; t.pending={}; writeBack(marks,src,$('#sis1')); t.view='home'; renderT(); return; }
+    const row2=TODAY.find(r=>r.k===t.period&&r.cls===t.course); const marks=t.coursePending[key]||t.courseDone[key]||((t.day!==22||(row2&&row2.te))?fakeMarks(key):{}); t.courseDone[key]=marks; delete t.coursePending[key];
+    writeBack(marks,'課堂點名（教師）',$('#sis1'),t.course,['早修','午休'].includes(PNAME[t.period])?PNAME[t.period]:'第'+PNAME[t.period]+'節'); t.view='home'; renderT(); return; }
+  const ph=e.target.closest('[data-photo]'); if(ph){ S.showPhoto=ph.dataset.photo==='1'; renderT(); return; }
+  if(e.target.closest('#t-saveset')){ toast('已儲存','點名設定已更新。','info'); return; }
+  const pk=e.target.closest('[data-pick]'); if(pk){ const s=STUDENTS.find(x=>x.id===pk.dataset.pick); S.helperFor[t.setHelperCourse]=`${s.n}(${s.id})`; renderT(); return; }
+  if(e.target.closest('#t-savehelper')){ toast('已儲存',`${t.setHelperCourse} 的小幫手已設定為 ${S.helperFor[t.setHelperCourse]||'--'}。`,'info'); t.view='settings'; renderT(); return; }
+});
+
+function openPeriodPicker(courseName){
+  const c=COURSES.find(x=>x.n===courseName); const d=$('#t-dlg'); d.hidden=false;
+  d.innerHTML=`<div class="box" role="dialog" aria-modal="true" style="width:min(340px,92%)"><button class="x" id="pp-x" aria-label="關閉">✕</button><h4>${c.n}${c.sub?' '+c.sub:''}</h4>
+    <div class="pgrid">${ALLP.map(([k,n])=>`<button class="pbtn" data-pp="${k}" ${c.periods.includes(k)?'':'disabled'}>${n}</button>`).join('')}</div>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:10px">請選擇今天要點名的節次（灰色為此課程今日沒有的節次）。</p></div>`;
+  $('#pp-x').onclick=()=>{d.hidden=true;};
+  d.onclick=e=>{ const b=e.target.closest('[data-pp]'); if(!b||b.disabled)return; d.hidden=true; const t=T(); t.course=c.n; t.period=b.dataset.pp; t.view='roll'; t.pickedCourse=true; renderT(); };
+}
+
+/* ================= HELPER ================= */
+const H=()=>S.helper;
+function hSteps(){
+  const cnt=Object.values(H().pending).filter(x=>x!=='att').length;
+  return [
+    {t:'在「今日點名」點 320 午休 那一列',done:H().view!=='home'||S.helperDone||S.helperSkipped},
+    {t:'點學生右側「--」標記曠課（左上可切換曠課／遲到）',done:cnt>0||S.helperDone||S.helperSkipped},
+    {t:'按右上「儲存」，出現授課教師確認視窗',done:S.helperDone||S.helperSkipped},
+    {t:'情境 2-1：輸入老師密碼按「確定」→ 直接寫回校務系統',done:S.helperDone},
+    {t:'情境 2-2：按「略過」→ 交由班導師在老師端確認後寫回；小幫手之後也能再點午休列、輸入密碼補送出',done:S.helperSkipped},
+  ];
+}
+function renderH(){
+  const v=$('#h-view'); const h=H();
+  const noonT=S.teacherDone||S.helperDone, noonH=S.helperDone||S.helperSkipped;
+  if(h.view==='home'){
+    v.innerHTML=`
+      <div class="h-title">課堂點名 ( 2026/09/22 )</div>
+      <div class="chips"><span class="chip">點名學年度<b>111</b></span><span class="chip">點名學期<b>1</b></span></div>
+      <table class="happ"><thead><tr><th>今日點名</th><th>節次</th><th class="c"><span class="badge">教</span></th><th class="c"><span class="badge">幫</span></th></tr></thead><tbody>
+        ${TODAY.map(r=>{const te=r.dyn?noonT:r.te, he=r.dyn?noonH:(r.he||!!(h.otherDone&&h.otherDone[r.k])||!!(h.otherSkipped&&h.otherSkipped[r.k])); const teO=r.dyn?noonT:(r.te||!!(h.otherDone&&h.otherDone[r.k])); return `<tr class="row ${r.dyn&&!(S.helperDone||S.teacherDone)?'hot':''}" data-h="roll" data-period="${r.k}" data-cls="${r.cls}"><td>${r.cls}</td><td class="c">${r.n}</td><td class="c"><span class="ck ${teO?'on':''}">✓</span></td><td class="c"><span class="ck ${he?'on':''}">✓</span></td></tr>`;}).join('')}
+      </tbody></table>
+      ${S.helperDone?`<div class="pbanner ok" style="margin-top:14px"><span>✓</span><div><b>午休點名完成（情境 2-1）</b>老師密碼確認，缺曠已直接寫入校務系統。</div><button class="btn-s" data-go="0">返回主選單</button></div>`:''}
+      ${S.helperSkipped&&!S.teacherDone?`<div class="pbanner warn" style="margin-top:14px"><span>⚠</span><div><b>已略過密碼（情境 2-2）</b>已通知授課老師黃婉婷確認。小幫手也可以再點一次午休列，輸入老師密碼直接送出。</div><button class="btn-s blue" data-go="1">切換到老師手機 →</button></div>`:''}
+      ${S.helperSkipped&&S.teacherDone?`<div class="pbanner ok" style="margin-top:14px"><span>✓</span><div><b>班導師已確認（情境 2-2 完成）</b>缺曠已寫入校務系統。</div><button class="btn-s" data-go="0">返回主選單</button></div>`:''}
+      <div class="foot-pw">Powered By ischool</div>`;
+  } else {
+    const isNoon=h.period==='p6'; const row=TODAY.find(r=>r.k===h.period);
+    let done=false,marks,sent=false;
+    h.otherPending=h.otherPending||{}; h.otherDone=h.otherDone||{};
+    if(isNoon){ sent=S.helperDone||S.teacherDone; if(!Object.keys(h.pending).length&&(S.helperSkipped||sent)&&(S.helperMarks||S.marks))h.pending={...(sent?(S.marks||S.helperMarks):S.helperMarks)}; marks=h.pending; }
+    else { sent=!!h.otherDone[row.k]||row.he||row.te; if(!h.otherPending[row.k])h.otherPending[row.k]={...(h.otherDone[row.k]||((row.he||row.te)?fakeMarks(row.cls+'|'+row.k):{}))}; marks=h.otherPending[row.k]; }
+    const otherSkipped=!isNoon&&h.otherSkipped&&h.otherSkipped[row.k];
+    const cnt=Object.values(marks).filter(x=>x&&x!=='att').length;
+    v.innerHTML=`
+      <div class="hcrumb"><button class="back" data-h="home">課堂點名</button> › <b>${row.cls}（2026/09/22：${row.n}）</b></div>
+      <div class="htools">
+        <button class="hbtn" id="h-dd" ${done?'disabled':''}>${LABEL[h.dd]} ▾</button>
+        <div class="ddmenu" id="h-ddm" hidden style="top:100%"><button data-dd="abs" class="${h.dd==='abs'?'cur':''}">曠課</button><button data-dd="late" class="${h.dd==='late'?'cur':''}">遲到</button></div>
+        <button class="hbtn light" id="h-save" ${done?'disabled':''}>${cnt?`儲存 (${LABEL[h.dd]}: ${cnt})`:'儲存'}</button>
+      </div>
+      ${(isNoon&&S.helperSkipped&&!done)||otherSkipped?`<div class="pbanner warn"><span>⚠</span><div><b>上次已略過密碼確認</b>可再修改後按「儲存」，輸入老師密碼即可送出。</div></div>`:''}
+      ${sent&&!otherSkipped?`<div class="pbanner ok"><span>✓</span><div><b>${isNoon?'午休點名已送出':'此節點名已完成'}</b>可修改後再按「儲存」，仍需授課老師確認。</div></div>`:''}
+      ${STUDENTS.map(s=>{const m=marks[s.id]; return `<div class="srow"><div><div class="nm">${s.n}</div><div class="id">${s.id}</div></div><div style="display:flex;align-items:center"><span class="seat">320 &nbsp;${s.seat}</span><button class="stb ${m&&m!=='att'?m:''}" data-stu="${s.id}" ${done?'disabled':''}>${m&&m!=='att'?LABEL[m]:'- -'}</button></div></div>`;}).join('')}
+      <div class="foot-pw">Powered By ischool</div>`;
+  }
+  renderSteps($('#h-steps'),hSteps()); renderSIS($('#sis2'));
+}
+$('#h-view').addEventListener('click',e=>{
+  const h=H();
+  const nav=e.target.closest('[data-h]'); if(nav){
+    if(nav.dataset.h==='roll'){ h.period=nav.dataset.period||'p6'; }
+    h.view=nav.dataset.h; renderH(); return; }
+  if(e.target.closest('#h-dd')){ $('#h-ddm').hidden=!$('#h-ddm').hidden; return; }
+  const dd=e.target.closest('[data-dd]'); if(dd){ h.dd=dd.dataset.dd; renderH(); return; }
+  const st=e.target.closest('[data-stu]'); if(st){ const id=st.dataset.stu; const m=h.period==='p6'?h.pending:(h.otherPending[h.period]||(h.otherPending[h.period]={})); m[id]=(m[id]&&m[id]!=='att')?'att':h.dd; renderH(); return; }
+  if(e.target.closest('#h-save')){ openTeacherConfirm(h.period); return; }
+});
+function openTeacherConfirm(periodKey='p6'){
+  const d=$('#h-dlg'); d.hidden=false; const row=TODAY.find(r=>r.k===periodKey); const teacherName=periodKey==='p6'||periodKey==='p0'?'黃婉婷':'林雅萍';
+  d.innerHTML=`<div class="box" role="dialog" aria-modal="true"><button class="x" id="hd-x" aria-label="關閉">✕</button><h4>授課教師確認</h4><p>授課教師${teacherName}</p>
+    <div class="pwrow"><span>點名密碼</span><input id="hd-pw" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="點名密碼"></div>
+    <p style="font-size:11.5px;color:var(--muted)">示範：輸入任意 4 位數字即可確認；按「略過」則交由班導師確認。</p>
+    <div class="acts"><button class="hbtn light" id="hd-skip">略過</button><button class="hbtn light" id="hd-ok" disabled>確定</button></div></div>`;
+  const pw=$('#hd-pw'); pw.focus();
+  pw.addEventListener('input',()=>{ pw.value=pw.value.replace(/\D/g,'').slice(0,4); $('#hd-ok').disabled=pw.value.length!==4; });
+  $('#hd-x').onclick=()=>{d.hidden=true;};
+  const h=H();
+  if(periodKey==='p6'){
+    $('#hd-ok').onclick=()=>{ d.hidden=true; S.helperMarks={...h.pending}; S.helperDone=true; S.teacherDone=true; h.view='home'; writeBack(S.helperMarks,'課堂點名（小幫手代點・密碼確認）',$('#sis2')); renderH(); };
+    $('#hd-skip').onclick=()=>{ d.hidden=true; S.helperMarks={...h.pending}; S.helperSkipped=true; h.view='home'; renderH(); toast('已略過密碼確認','小幫手點名已暫存，已通知授課老師黃婉婷於老師端確認。','warn'); };
+  } else {
+    const marks={...(h.otherPending&&h.otherPending[periodKey]||{})};
+    $('#hd-ok').onclick=()=>{ d.hidden=true; h.otherDone=h.otherDone||{}; h.otherDone[periodKey]=marks; h.view='home'; writeBack(marks,'課堂點名（小幫手代點・密碼確認）',$('#sis2'),row.cls,'第'+row.n+'節'); renderH(); };
+    $('#hd-skip').onclick=()=>{ d.hidden=true; h.otherSkipped=h.otherSkipped||{}; h.otherSkipped[periodKey]=true; h.view='home'; renderH(); toast('已略過密碼確認',`${row.cls} 第${row.n}節小幫手點名已暫存，已通知授課教師${teacherName}確認。`,'warn'); };
+  }
+}
+
+/* ---------- leave prompt ---------- */
+function pendingSteps(){
+  if(!$('#stage1').hidden&&!S.teacherDone&&T().day===22){
+    const L=[]; const t=T();
+    if(t.view!=='roll')L.push(['在「今日點名」點 320 午休 那一列','進入點名畫面']);
+    L.push(['點大頭照標記缺曠後，按右上「送出」','缺曠才會寫入校務系統']);
+    return {role:'老師端',steps:L};
+  }
+  if(!$('#stage2').hidden&&!S.helperDone&&!S.helperSkipped){
+    const L=[]; const h=H();
+    if(h.view!=='roll')L.push(['在「今日點名」點 320 午休 那一列','進入代點名畫面']);
+    L.push(['點學生右側「--」標記後，按右上「儲存」','會出現授課教師確認視窗']);
+    L.push(['在確認視窗輸入密碼按「確定」，或按「略過」','確定＝直接寫回校務系統；略過＝交由班導師確認']);
+    return {role:'小幫手',steps:L};
+  }
+  return null;
+}
+function openLeave(info){
+  const li=info.steps.map(([a,b],i)=>`<li><span class="ln">${i+1}</span><div><b>${a}</b><div class="lsub">${b}</div></div></li>`).join('');
+  $('#modalHost').innerHTML=`<div class="modal"><div class="box" role="dialog" aria-modal="true" style="width:min(460px,100%)">
+    <h3>${info.role}的流程還沒走完</h3><div class="sub">還有 ${info.steps.length} 個步驟沒有操作：</div><ol class="leftlist">${li}</ol>
+    <div class="row"><button class="btn" data-go="0" data-force>仍要返回主選單</button><button class="btn accent" data-close style="min-width:140px">繼續操作</button></div></div></div>`;
+}
+
+
+/* ---------- misclick guide: flash what can be clicked ---------- */
+const INTERACTIVE='button,a,input,select,textarea,label,canvas,[role="button"],[tabindex],.pop,.cal,.modal,.pdlg,.ddmenu,.toasts,[data-go]';
+function flashTargets(){
+  const sels=nextTargets(); if(!sels)return;
+  const els=[]; sels.forEach(sel=>$$(sel).forEach(el=>{ if(!el.disabled&&el.offsetParent!==null&&!el.closest('[hidden]'))els.push(el); }));
+  const list=els.slice(0,24); if(!list.length)return;
+  list.forEach(el=>{ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2000); });
+  const first=list[0]; const r=first.getBoundingClientRect(); if(r.top<0||r.bottom>window.innerHeight)first.scrollIntoView({block:'center',behavior:'smooth'});
+}
+document.addEventListener('pointerdown',e=>{
+  if(!$('#stage0').hidden)return;                      // home: no guide
+  if($('#modalHost').children.length)return;           // a modal is open
+  if(e.target.closest(INTERACTIVE))return;             // clicked something real
+  flashTargets();
+},true);
+function nextTargets(){
+  if(!$('#stage1').hidden){
+    if(!$('#t-dlg').hidden)return ['#t-dlg button:not([disabled])'];
+    const t=T();
+    if(t.view==='home'){ return S.teacherDone?['#t-view [data-pickperiod]','#t-view [data-t="roll"]','#done1 .btn']:['#t-view [data-t="roll"][data-period="p6"]']; }
+    if(t.view==='roll'){ const locked=!$('#t-send')||$('#t-send').disabled; return locked?['#t-view .back']:['#t-view .card[data-stu]','#t-send']; }
+    if(t.view==='settings')return ['#t-view [data-t="pickHelper"]','#t-view .back'];
+    if(t.view==='pickHelper')return ['#t-view [data-pick]','#t-savehelper'];
+  }
+  if(!$('#stage2').hidden){
+    if(!$('#h-dlg').hidden)return ['#h-dlg button:not([disabled])','#hd-pw'];
+    const h=H();
+    if(h.view==='home'){ return (S.helperDone||S.teacherDone)?['#h-view .pbanner .btn-s','#h-view [data-h="roll"]']:['#h-view [data-h="roll"][data-period="p6"]']; }
+    const locked=!$('#h-save')||$('#h-save').disabled; return locked?['#h-view .back']:['#h-view .stb[data-stu]','#h-save'];
+  }
+  return null;
+}
+/* ---------- mascot ---------- */
+let mascots=[]; try{ mascots=[new XuebaoMascot($('#mXue'))]; }catch(e){ console.warn(e); }
+function mascotsActive(on){ mascots.forEach(m=>on?m.resume():m.pause()); }
+
+/* ---------- reset ---------- */
+$('#resetAll').addEventListener('click',()=>{ S=fresh(); renderT(); renderH(); toast('已重設','所有示範資料已回到初始狀態。','info'); });
+renderT(); renderH(); document.body.classList.add('at-home');
+})();
+</script>
+
+</body></html>
