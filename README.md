@@ -6,6 +6,7 @@
 |---|---|
 | 大屏點名互動體驗 | https://kandyhuang-ischool.github.io/interactive-demos/attendance-bigscreen/ |
 | 課堂點名互動體驗 | https://kandyhuang-ischool.github.io/interactive-demos/attendance-classroom/ |
+| 1Campus Write 互動體驗 | https://kandyhuang-ischool.github.io/interactive-demos/1campus-write/ |
 
 ## 新增作品
 1. 開一個新資料夾（英文小寫、用 `-` 連接），把網頁存成資料夾裡的 `index.html`。
